@@ -8,7 +8,7 @@
 .movies-card-list__cards {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .movies-card-list__button {
@@ -23,7 +23,6 @@
     font-size: 12px;
     line-height: 15px;
     text-align: center;
-    /* cursor: pointer; */
 }
 
 

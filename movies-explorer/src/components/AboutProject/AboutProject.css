@@ -27,7 +27,7 @@
 }
 
 .about__container {
-    width: 284px;
+    /* width: 284px; */
     margin: 4px 18px 70px;
     display: grid;
     grid-template-areas: 
@@ -45,7 +45,7 @@
     color: white;
     margin: 0;
     padding: 11px 0;
-    width: 100px;
+    min-width: 100px;
     text-align: center;
 }
 
@@ -57,7 +57,7 @@
     background-color: #F2F2F2;
     margin: 0;
     padding: 11px 0;
-    width: 184px;
+    min-width: 184px;
 }
 
 .about__caption {
@@ -125,14 +125,14 @@
         font-size: 14px;
         line-height: 17px;
         padding-top: 9px;
-        width: 140px;
+        min-width: 140px;
     }
 
     .about__four-weeks {
         font-size: 14px;
         line-height: 17px;
         padding-top: 9px;
-        width: 528px;
+        min-width: 528px;
     }
 
     .about__caption {
@@ -172,11 +172,11 @@
     }
 
     .about__one-week {
-        width: 228px;
+        min-width: 228px;
     }
 
     .about__four-weeks {
-        width: 656px;
+        min-width: 656px;
     }
 }
 

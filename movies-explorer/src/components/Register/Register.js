@@ -7,8 +7,10 @@ import './Register.css';
 function Register(props) {
         return (
             <div className="auth">
-                <Link to="/"><img className="auth__image" src={logo} alt="Логотип" /></Link>
-                <h2 className="auth__title">Добро пожаловать!</h2>
+                <div className="auth__container">
+                    <Link to="/"><img className="auth__image" src={logo} alt="Логотип" /></Link>
+                    <h2 className="auth__title">Добро пожаловать!</h2>
+                </div>
                 <form className="auth__form">
                     <p className="auth__name">Имя</p>
                     <input placeholder="" className="auth__input" required id="name" name="name" type="text" value='' />

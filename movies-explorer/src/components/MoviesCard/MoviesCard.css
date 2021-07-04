@@ -62,7 +62,8 @@
     width: 14px;
     height: 12px;
     background-color: #F9F9F9;;
-    background-image: url('../../images/delete.svg') no-repeat;
+    background-image: url('../../images/delete.svg');
+    background-repeat: no-repeat;
     border: 0;
     box-sizing: border-box;
     padding: 0;
