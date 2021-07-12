@@ -48,6 +48,7 @@
     font-size: 12px;
     line-height: 15px;
     padding: 0;
+    cursor: pointer;
 }
 
 .profile__exit {

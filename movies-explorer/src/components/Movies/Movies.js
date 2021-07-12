@@ -10,10 +10,10 @@ import Footer from '../Footer/Footer';
 function Movies(props) {
     return (
         <div className="content">
-            <SearchForm />
-            <FilterCheckbox />
-            <Preloader />
-            <MoviesCardList />
+            <SearchForm setValue={props.setValue} />
+            <FilterCheckbox /* filterDuration={props.filterDuration} */ />
+            {/* <Preloader /> */}
+            <MoviesCardList filterMovies={props.filterMovies} />
             <Footer />
         </div>
         
