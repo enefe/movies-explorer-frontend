@@ -11,9 +11,9 @@ function Movies(props) {
     return (
         <div className="content">
             <SearchForm setValue={props.setValue} />
-            <FilterCheckbox /* filterDuration={props.filterDuration} */ />
+            <FilterCheckbox filterMovies={props.filterMovies} />
             {/* <Preloader /> */}
-            <MoviesCardList filterMovies={props.filterMovies} />
+            <MoviesCardList filterMovies={props.filterMovies} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
             <Footer />
         </div>
         

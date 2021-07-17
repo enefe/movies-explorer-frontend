@@ -125,6 +125,55 @@ function App() {
     };
   }) */
 
+  // Отображение сохраненных фильмов:
+
+  const [savedMovie, setSavedMovie] = React.useState([]);
+
+  React.useEffect(() => {
+    getSavedMovies();
+  }, [loggedIn])
+
+  function getSavedMovies() {
+    const jwt = localStorage.getItem("jwt");
+    api.getMovies(jwt)
+      .then((res) => {
+        setSavedMovie(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  // Добавление фильма:
+
+  React.useEffect(() => {
+    handleAddMovie();
+  }, [loggedIn])
+
+  function handleAddMovie(movie) {
+    const jwt = localStorage.getItem("jwt");
+    api.addMovie(movies, jwt)
+      .then((res) => {
+        setMovies(movies);
+        getSavedMovies();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // Удаление фильма:
+
+  function handleMovieDelete(movie) {
+    api.deleteMovie(movie)
+        .then(() => {
+            setMovies(movies.filter(c => c.movieId !== movie.movieId));
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
   // Авторизация и регистрация:
 
   function onRegister(name, email, password) {
@@ -197,12 +246,17 @@ function App() {
             filterMovies={filterMovies}
             /* filterDuration={filterDuration} */
             setValue={setValue}
+            onMovieLike={handleAddMovie}
+            onMovieDelete={handleMovieDelete}
           />
 
           <ProtectedRoute
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
+            filterMovies={filterMovies}
+            setValue={setValue}
+            onMovieDelete={handleMovieDelete}
           />
 
           <ProtectedRoute

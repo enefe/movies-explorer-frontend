@@ -5,19 +5,26 @@ import icon from '../../images/icon.svg';
 import search from '../../images/search.svg';
 
 function SearchForm(props) {
-/*     const handleSubmit = (e) => {
-        e.preventDefault();
-        props.setValue(e.target.value);
-    } */
+    const inputEl = React.useRef(null);
 
-/*     const handleChange = (e) => {
-        props.setValue(e.target.value);
-    } */
+    let validate = '';
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        if (inputEl.current.value === '') {
+            validate = <p className="search-form__validate">Нужно ввести ключевое слово</p>
+        } else {
+            validate = '';
+            props.setValue(inputEl.current.value);
+        }
+    }
 
     return (
-        <form /* onSubmit={handleSubmit} */ className="search-form">
+        <form onSubmit={handleSubmit} className="search-form">
             <img className="search-form__image" src={icon} alt="Поиск" />
-            <input onChange={(e) => props.setValue(e.target.value)} /* onChange={handleChange} */ placeholder="Фильм" className="search-form__input" required id="movie" name="movie" type="text" defaultValue='' />
+            <input ref={inputEl} placeholder="Фильм" className="search-form__input" /* required */ id="movie" name="movie" type="text" defaultValue='' />
+            {validate}
             <button type="submit" className="search-form__button">
                 <img className="search-form__search" src={search} alt="Поиск" />
             </button>

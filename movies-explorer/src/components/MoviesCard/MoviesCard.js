@@ -3,7 +3,25 @@ import { Route, Switch } from 'react-router-dom';
 
 import './MoviesCard.css';
 
-function MoviesCard(props) { 
+function MoviesCard(props) {
+    const [isLiked, setIsLiked] = React.useState(false);
+
+/*     const handleLikeClick = () => {
+        setIsLiked(true);
+    } */
+
+    const onMovieLike = () => {
+        props.onMovieLike(props.movie);
+        setIsLiked(!isLiked);
+    }
+
+    const onMovieDelete = () => {
+        props.onMovieDelete(props.movie);
+    }
+    console.log(props.movie);
+
+    const cardLikeButtonClassName = ( `movies-card__like ${isLiked ? 'movies-card__like_active' : 'movies-card__like'}`);
+
     return (
             <div className="movies-card">
                 <img className="movies-card__image" src={`https://api.nomoreparties.co${props.movie.image.url}`} alt="Картинка" />
@@ -14,16 +32,14 @@ function MoviesCard(props) {
                     </div>
                     <Switch>
                         <Route exact path="/movies">
-                            <button className="movies-card__like movies-card__like_active" type="button"></button>
+                            <button onClick={onMovieLike} className={cardLikeButtonClassName} /* className="movies-card__like_active movies-card__like" */ type="button"></button>
                         </Route>
                         <Route exact path="/saved-movies">
-                            <button className="movies-card__like_delete" type="button"></button>
+                            <button onClick={onMovieDelete} className="movies-card__like_delete" type="button"></button>
                         </Route>
                     </Switch>
                 </div>
             </div>
-
-        
     )
 }
 

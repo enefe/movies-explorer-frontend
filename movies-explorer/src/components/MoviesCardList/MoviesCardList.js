@@ -18,12 +18,12 @@ function MoviesCardList(props) {
                 {
                     props.filterMovies.slice(0, visible).map((item) => {
                         return (
-                            <MoviesCard movie={item} key={item._id} /* onCardLike={props.onCardLike} onCardDelete={props.onCardDelete} */ />
+                            <MoviesCard movie={item} key={item._id} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
                         )
                     })
-                } 
+                }
             </div>
-            <button onClick={showMoreMovies} className={buttonVisible}>Ещё</button>
+                <button onClick={showMoreMovies} className={buttonVisible}>Ещё</button>
         </section>
     )
 };

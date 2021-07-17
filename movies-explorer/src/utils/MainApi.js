@@ -30,6 +30,34 @@ class Api {
         })
         .then(handleResponse)
     }
+
+    getMovies() {
+        return fetch(`${this._url}/movies`, {
+            method: "GET",
+            headers: this._headers
+        })
+        .then(handleResponse)
+    }
+
+    addMovie(newMovie, jwt) {
+        return fetch(`${this._url}/movie`, {
+            method: "POST",
+            headers: this._headers,
+            body: JSON.stringify({
+                movie: newMovie,
+                jwt: jwt
+              })
+        })
+        .then(handleResponse)
+    }
+
+    deleteMovie(movie) {
+        return fetch(`${this._url}/movie/${movie.movieId}`, {
+            method: "DELETE",
+            headers: this._headers
+        })
+        .then(handleResponse)
+    }
 }
 
 export const api = new Api({
