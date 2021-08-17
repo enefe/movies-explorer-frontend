@@ -10,7 +10,7 @@ function SavedMovies(props) {
         <div className="content">
             <SearchForm setValue={props.setValue} />
             <FilterCheckbox />
-            <SavedMoviesCardList filterMovies={props.filterMovies} onMovieDelete={props.onMovieDelete} />
+            <SavedMoviesCardList filterSavedMovies={props.filterSavedMovies} onMovieDelete={props.onMovieDelete} />
             <Footer />
         </div>
     )

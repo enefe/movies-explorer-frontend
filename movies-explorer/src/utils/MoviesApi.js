@@ -26,7 +26,9 @@ export const apiMovies = new Api({
         'Content-type': 'application/json',
         /* authorization: `Bearer ${localStorage.getItem('token')}` */
     }
-});
+}); 
+
+/* https://api.nomoreparties.co/beatfilm-movies */
 
 
 

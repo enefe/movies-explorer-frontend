@@ -1,16 +1,16 @@
 import React from 'react';
-import MoviesCard from '../MoviesCard/MoviesCard';
 
 import '../MoviesCardList/MoviesCardList.css';
+import SavesMoviesCard from '../SavedMoviesCard/SavedMoviesCard';
 
 function SavedMoviesCardList(props) {
     return (
         <section className="movies-card-list">
             <div className="movies-card-list__cards">
                 {
-                    props.filterMovies.map((item) => {
+                    props.filterSavedMovies.map((item) => {
                         return (
-                            <MoviesCard movie={item} key={item._id} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
+                            <SavesMoviesCard savedMovie={item} key={item._id} onMovieDelete={props.onMovieDelete} />
                         )
                     })
                 }

@@ -127,13 +127,46 @@ function App() {
 
   // Отображение сохраненных фильмов:
 
-  const [savedMovie, setSavedMovie] = React.useState([]);
+  const [savedMovies, setSavedMovies] = React.useState([]);
 
   React.useEffect(() => {
     getSavedMovies();
   }, [loggedIn])
 
   function getSavedMovies() {
+    if (loggedIn) {
+      api.getMovies()
+      .then((res) => {
+        const savedMovies = res.map((item) => {
+          return {
+              country: item.country,
+              director: item.director,
+              duration: item.duration,
+              year: item.year,
+              description: item.description,
+              image: item.image,
+              trailer: item.trailer,
+              thumbnail: item.thumbnail,
+              owner: item.owner,
+              movieId: item.movieId,
+              nameRU: item.nameRU,
+              nameEN: item.nameEN
+          }
+      })
+        setSavedMovies(savedMovies);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+    
+  }
+
+  const filterSavedMovies = savedMovies.filter((savedMovie) => {
+    return savedMovie.nameRU.toLowerCase().includes(value.toLowerCase());
+  })
+
+/*   function getSavedMovies() {
     const jwt = localStorage.getItem("jwt");
     api.getMovies(jwt)
       .then((res) => {
@@ -142,7 +175,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-  }
+  } */
 
   // Добавление фильма:
 
@@ -151,11 +184,10 @@ function App() {
   }, [loggedIn])
 
   function handleAddMovie(movie) {
-    const jwt = localStorage.getItem("jwt");
-    api.addMovie(movies, jwt)
+    api.addMovie(movie)
       .then((res) => {
-        setMovies(movies);
-        getSavedMovies();
+        console.log(res);
+        setSavedMovies(res);
       })
       .catch((err) => {
         console.log(err);
@@ -229,6 +261,8 @@ function App() {
     tokenCheck();
   }, [])
 
+  /*     const jwt = localStorage.getItem("jwt"); */
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -254,7 +288,7 @@ function App() {
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
-            filterMovies={filterMovies}
+            filterSavedMovies={filterSavedMovies}
             setValue={setValue}
             onMovieDelete={handleMovieDelete}
           />

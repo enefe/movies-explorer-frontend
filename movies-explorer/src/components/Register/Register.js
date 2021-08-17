@@ -25,7 +25,7 @@ function Register(props) {
             </div>
             <form onSubmit={handleSubmit} className="auth__form">
                 <p className="auth__name">Имя</p>
-                <input placeholder="" className="auth__input" required id="name" name="name" type="text" vadefaultValue={state.name} onChange={handleChange} />
+                <input placeholder="" className="auth__input" required id="name" name="name" type="text" defaultValue={state.name} onChange={handleChange} />
                 <p className="auth__name">Email</p>
                 <input placeholder="" className="auth__input" required id="email" name="email" type="text" defaultValue={state.email} onChange={handleChange} />
                 <p className="auth__name">Пароль</p>

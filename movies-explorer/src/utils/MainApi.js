@@ -39,20 +39,19 @@ class Api {
         .then(handleResponse)
     }
 
-    addMovie(newMovie, jwt) {
-        return fetch(`${this._url}/movie`, {
+    addMovie(newMovie) {
+        return fetch(`${this._url}/movies`, {
             method: "POST",
             headers: this._headers,
             body: JSON.stringify({
-                movie: newMovie,
-                jwt: jwt
+                movie: newMovie
               })
         })
         .then(handleResponse)
     }
 
     deleteMovie(movie) {
-        return fetch(`${this._url}/movie/${movie.movieId}`, {
+        return fetch(`${this._url}/movies/${movie.movieId}`, {
             method: "DELETE",
             headers: this._headers
         })
