@@ -39,19 +39,31 @@ class Api {
         .then(handleResponse)
     }
 
-    addMovie(newMovie) {
+    addMovie(movie) {
         return fetch(`${this._url}/movies`, {
             method: "POST",
             headers: this._headers,
             body: JSON.stringify({
-                movie: newMovie
-              })
+                country: movie.country || 'Нет страны',
+                director: movie.director,
+                duration: movie.duration,
+                year: movie.year,
+                description: movie.description,
+                image: `https://api.nomoreparties.co${movie.image.url}` || 'Картинка не найдена',
+                trailer: movie.trailerLink || 'https://www.youtube.com',
+                nameRU: movie.nameRU,
+                nameEN: movie.nameEN,
+                thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}` || 'Картинка не найдена',
+                movieId: movie.id,
+                _id: movie._id
+            })
         })
         .then(handleResponse)
     }
 
     deleteMovie(movie) {
-        return fetch(`${this._url}/movies/${movie.movieId}`, {
+        /* debugger; */
+        return fetch(`${this._url}/movies/${/* movie.movieId ||  */movie._id}`, {
             method: "DELETE",
             headers: this._headers
         })

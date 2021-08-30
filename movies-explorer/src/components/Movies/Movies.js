@@ -8,12 +8,24 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
 
 function Movies(props) {
+
+    const onDeleteSavedMovie = (movie) => {
+        /* debugger; */
+        props.filterSavedMovies.forEach((c) => {
+            if (c._id === movie._id) {
+                props.onMovieDelete(movie);
+            }
+        });
+    }
+
     return (
         <div className="content">
-            <SearchForm setValue={props.setValue} />
-            <FilterCheckbox filterMovies={props.filterMovies} />
-            {/* <Preloader /> */}
-            <MoviesCardList filterMovies={props.filterMovies} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
+            <SearchForm short={props.short} onShortMovies={props.onShortMovies} onSearchMovie={props.onSearchMovie} />
+            <FilterCheckbox onShortMovies={props.onShortMovies} />
+            {props.preloader 
+                ? <Preloader /> 
+                : <MoviesCardList filterMovies={props.filterMovies} filterSavedMovies={props.filterSavedMovies} isSavedMovie={props.isSavedMovie} onMovieLike={props.onMovieLike} onMovieDelete={onDeleteSavedMovie} />
+            }
             <Footer />
         </div>
         
