@@ -121,8 +121,8 @@ function App() {
   const [short, setShort] = React.useState(false);
   const [value, setValue] = React.useState('');
   
-  const moviesJwt = JSON.parse(localStorage.getItem('movies'));
-  const filterMovies = moviesJwt.filter((movie) => {
+  /* const moviesJwt = JSON.parse(localStorage.getItem('movies')); */
+  const filterMovies = movies.filter((movie) => {
     return (movie.nameRU.toLowerCase().includes(value.toLowerCase())) && (short ? movie.duration < 40 : movie.duration >= 40);
   })
 
