@@ -11,12 +11,25 @@ function Header(props) {
         <header className="header">
             <Link to="/"><img className="header__logo header__logo_auth" src={logo} alt="Логотип" /></Link>
             <Switch>
-                <Route exact path="/">
-                    <div className="header__signs">
-                        <Link to="signup" className="header__signup">Регистрация</Link>
-                        <Link to="signin" className="header__signin">Войти</Link>
-                    </div>    
-                </Route>
+
+                {
+                    !props.loggedIn ? (
+                        <Route exact path="/">
+                            <div className="header__signs">
+                                <Link to="signup" className="header__signup">Регистрация</Link>
+                                <Link to="signin" className="header__signin">Войти</Link>
+                            </div>    
+                        </Route>
+                    ) : (
+                        <Route exact path="/">
+                            <div className="header__links">
+                                <Link to="/movies"  className="header__link" onClick={props.onClose}>Фильмы</Link>
+                                <Link to="/saved-movies"  className="header__link" onClick={props.onClose}>Сохренённые фильмы</Link>
+                            </div>  
+                        </Route>
+                    )
+                }
+
                 <Route exact path="/profile">
                     <img className="header__burger" src={burger} alt="Навигация" onClick={props.onOpenNavigation} />
                     <div className="header__links">

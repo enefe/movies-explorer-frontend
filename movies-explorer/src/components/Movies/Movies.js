@@ -11,7 +11,7 @@ function Movies(props) {
 
     const onDeleteSavedMovie = (movie) => {
         /* debugger; */
-        props.filterSavedMovies.forEach((c) => {
+        props.savedMovies.forEach((c) => {
             if (c._id === movie._id) {
                 props.onMovieDelete(movie);
             }
@@ -20,11 +20,11 @@ function Movies(props) {
 
     return (
         <div className="content">
-            <SearchForm short={props.short} onShortMovies={props.onShortMovies} onSearchMovie={props.onSearchMovie} />
+            <SearchForm setValue={props.setValue} short={props.short} onShortMovies={props.onShortMovies} onSearchMovie={props.onSearchMovie} />
             <FilterCheckbox onShortMovies={props.onShortMovies} />
             {props.preloader 
                 ? <Preloader /> 
-                : <MoviesCardList filterMovies={props.filterMovies} filterSavedMovies={props.filterSavedMovies} isSavedMovie={props.isSavedMovie} onMovieLike={props.onMovieLike} onMovieDelete={onDeleteSavedMovie} />
+                : <MoviesCardList filterMovies={props.filterMovies} short={props.short} movies={props.movies} filterSavedMovies={props.filterSavedMovies} isSavedMovie={props.isSavedMovie} onMovieLike={props.onMovieLike} onMovieDelete={onDeleteSavedMovie} />
             }
             <Footer />
         </div>

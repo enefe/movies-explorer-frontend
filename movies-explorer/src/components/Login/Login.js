@@ -1,13 +1,22 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import logo from '../../images/logo.svg';
+import useFormValidation from "../../utils/useFormValidation";
 
 import './Login.css';
 
 function Login(props) {
-    const [state, setState] = React.useState({email: '', password: ''});
+    const { values, errors, valid, handleChange, resetForm } = useFormValidation({});
 
-    function handleChange (e) {
+    function handleSubmit(e) {
+        e.preventDefault();
+        props.onLogin(values.email, values.password);
+        resetForm();
+    }
+
+/*     const [state, setState] = React.useState({email: '', password: ''});
+
+    function handleChanges (e) {
         const {name, value} = e.target;
         setState(state => ({...state, [name]: value}));
     }
@@ -18,7 +27,7 @@ function Login(props) {
             return;
         }
         props.onLogin(state.email, state.password)
-    }
+    } */
 
     return (
         <div className="auth">
@@ -28,10 +37,12 @@ function Login(props) {
             </div>
             <form onSubmit={handleSubmit} className="auth__form">
                 <p className="auth__name">Email</p>
-                <input placeholder="" className="auth__input" required id="email" name="email" type="text" value={state.email} onChange={handleChange} />
+                <span className="auth__error">{errors.email}</span>
+                <input placeholder="" className={`auth__input ${errors.email && "auth__input_invalid"}`} required id="email" name="email" type="email" defaultValue={values.email || ''} onChange={handleChange} autoComplete="off" />
                 <p className="auth__name">Пароль</p>
-                <input placeholder="" className="auth__input" required id="password" name="password" type="password" value={state.password} onChange={handleChange} />
-                <button type="submit" className="auth__button">Войти</button>
+                <span className="auth__error">{errors.password}</span>
+                <input placeholder="" className={`auth__input ${errors.password && "auth__input_invalid"}`} required id="password" name="password" type="password" defaultValue={values.password || ''} onChange={handleChange} minLength="3" autoComplete="off" />
+                <button type="submit" className={`auth__button ${!valid && "auth__button_disable"}`} disabled={!valid}>Войти</button>
             </form>
             <div className="auth__sign">
                 <p className="auth__question">Ещё не зарегистрированы?</p>

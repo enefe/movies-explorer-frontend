@@ -15,6 +15,10 @@ function MoviesCardList(props) {
         setVisible((movie) => movie + 6);
     };
 
+/*     const movies = props.movies.filter((movie) => {
+        return (props.short ? movie.duration < 40 : movie.duration >= 40);
+      }) */
+
     const buttonVisible = ( `${visible < props.filterMovies.length ? 'movies-card-list__button' : 'movies-card-list__not-button'}`);
     
     return (
@@ -24,7 +28,7 @@ function MoviesCardList(props) {
                     props.filterMovies.slice(0, visible).map((item) => {
                         
                         return (
-                            <MoviesCard filterSavedMovies={props.filterSavedMovies} pathSavedMovie={pathSavedMovie} movie={item} key={item._id || item.moviedId} isSavedMovie={props.isSavedMovie} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
+                            <MoviesCard filterSavedMovies={props.filterSavedMovies} pathSavedMovie={pathSavedMovie} movie={item} key={item.id || item.moviedId} isSavedMovie={props.isSavedMovie} onMovieLike={props.onMovieLike} onMovieDelete={props.onMovieDelete} />
                         )
                     })
                 }

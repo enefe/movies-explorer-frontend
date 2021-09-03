@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { Route, Switch, Redirect, useHistory/* , useLocation */ } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
@@ -18,6 +18,7 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import Navigation from '../Navigation/Navigation';
 import PageNotFound from '../PageNotFound/PageNotFound';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -29,7 +30,10 @@ function App() {
 
   // Получение информации о профиле:
 
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = React.useState({
+    name: "",
+    email: "",
+});
 
   React.useEffect(() => {
     getUserInfo();
@@ -47,16 +51,24 @@ function App() {
     }
   }
 
-  // Попап с навигацией:
+  // Попап обновления данных профиля и навигация:
 
   const [isNavigationOpen, setNavigationOpen] = React.useState(false);
+  const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
+  const [tooltipStatus, setTooltipStatus] = React.useState('');
 
   function handleNavigationBurgerClick() {
     setNavigationOpen(true);
   }
 
+  function handleTooptipClick() {
+    setInfoTooltipOpen(true);
+    setTooltipStatus('success');
+  }
+
   function closeAllPopups() {
     setNavigationOpen(false);
+    setInfoTooltipOpen(false);
   }
 
   const history = useHistory();
@@ -66,7 +78,11 @@ function App() {
   function handleUpdateUser(data) {
     api.setUserInfo(data)
         .then((user) => {
-            setCurrentUser(user);
+            setCurrentUser({
+              ...currentUser,
+              name: user.newName,
+              email: user.newEmail,
+          });
         })
         .catch((err) => {
             console.log(err);
@@ -75,43 +91,25 @@ function App() {
 
   // Получение карточек с фильмами:
 
-  /* const location = useLocation(); */
   const [movies, setMovies] = React.useState([]);
 
   React.useEffect(() => {
     getMovies();
-  }, [loggedIn/* , location */])
+  }, [loggedIn])
 
   const getMovies = () => {
-    if (loggedIn /* && location.pathname === '/movies' */) {
+    if (loggedIn) {
         setPreloader(true);
         apiMovies.getMovies()
         .then((res) => {
-            localStorage.setItem('movies', JSON.stringify(res));
-            setMovies(JSON.parse(localStorage.getItem('movies')));
-            /* const movies = res.map((item) => {
-                return {
-                    country: item.country,
-                    director: item.director,
-                    duration: item.duration,
-                    year: item.year,
-                    description: item.description,
-                    image: item.image,
-                    trailer: item.trailer,
-                    thumbnail: item.thumbnail,
-                    owner: item.owner,
-                    movieId: item.movieId,
-                    nameRU: item.nameRU,
-                    nameEN: item.nameEN
-                }
-            })
-            setMovies(movies); */
+          localStorage.setItem('movies', JSON.stringify(res));
+          setMovies(JSON.parse(localStorage.getItem('movies')));
         })
         .catch((err) => {
-            console.log(err);
+          console.log(err);
         })
         .finally(() => setTimeout(() => {
-            setPreloader(false);
+          setPreloader(false);
         }, 1000))
     }
   }
@@ -121,34 +119,12 @@ function App() {
   const [short, setShort] = React.useState(false);
   const [value, setValue] = React.useState('');
   
-  /* const moviesJwt = JSON.parse(localStorage.getItem('movies')); */
+ /*  const moviesJwt = JSON.parse(localStorage.getItem('movies')); */
   const filterMovies = movies.filter((movie) => {
     return (movie.nameRU.toLowerCase().includes(value.toLowerCase())) && (short ? movie.duration < 40 : movie.duration >= 40);
   })
 
-/*   // Поиск фильмов: 
 
-  const [short, setShort] = React.useState(false);
-
-  function onSearchMovie(movie) {
-    if (movie) {
-
-        let jwt;
-        let getAllMovies;
-
-        if (location.pathname === '/movies') {
-            jwt = 'movies';
-            getAllMovies = setMovies;
-        } else {
-            jwt = 'savedMovies';
-            getAllMovies = setSavedMovies;
-        }
-
-        const moviesJwt = JSON.parse(localStorage.getItem(jwt));
-        const movies = moviesJwt.filter((item) => (item.nameRU.toLowerCase().includes(movie.toLowerCase())) && (short ? item.duration < 40 : item.duration >= 40));
-        getAllMovies(movies);
-    }
-  } */
   
   // Чекбокс короткометражек:
 
@@ -162,10 +138,10 @@ function App() {
 
   React.useEffect(() => {
     getSavedMovies();
-  }, [loggedIn, /* location, */ currentUser])
+  }, [loggedIn, currentUser])
 
   function getSavedMovies() {
-    if (loggedIn /* && (location.pathname === '/movies' || location.pathname === '/saved-movies') */) {
+    if (loggedIn) {
       setPreloader(true);
       api.getMovies()
       .then((movies) => {
@@ -188,10 +164,32 @@ function App() {
   }
 
   // Поиск сохраненных фильмов
-  /* const savedMoviesJwt = localStorage.getItem('savedMovies'); */
+  /* const savedMoviesJwt = JSON.parse(localStorage.getItem('savedMovies')); */
   const filterSavedMovies = savedMovies.filter((savedMovie) => {
     return savedMovie.nameRU.toLowerCase().includes(value.toLowerCase()) && (short ? savedMovie.duration < 40 : savedMovie.duration >= 40);
   })
+
+/*     // Поиск фильмов: 
+
+    function onSearchMovie(movie) {
+      if (movie) {
+  
+          let jwt;
+          let getAllMovies;
+  
+          if (location.pathname === '/movies') {
+              jwt = 'movies';
+              getAllMovies = setMovies;
+          } else if (location.pathname === '/saved-movies' ){
+              jwt = 'savedMovies';
+              getAllMovies = setSavedMovies;
+          }
+  
+          const moviesJwt = JSON.parse(localStorage.getItem(jwt));
+          const movies = moviesJwt.filter((item) => (item.nameRU.toLowerCase().includes(movie.toLowerCase())));
+          getAllMovies(movies);
+      }
+    } */
 
   // Добавление фильма:
 
@@ -219,37 +217,42 @@ function App() {
 
             setSavedMovies(JSON.parse(localStorage.getItem('savedMovies')));
         })
-/*         const movieId = savedMovies.find((item) => item.id === movie.id)._id;
-        api.deleteMovie(movieId)
-          .then(() => {
-            const newMovie = savedMovies.filter((c) => !(c._id === movieId));
-            setSavedMovies(newMovie);
-            localStorage.setItem("savedMovies", JSON.stringify(newMovie));
-          })   */ 
-/*         api.deleteMovie(movie)
-          .then(() => {
-              const newSavedMovies = savedMovies.filter((savedMovie) => savedMovie.movieId !== (movie.id || movie.movieId));
-              setSavedMovies(newSavedMovies);
-          }) */
-          .catch((err) => {
-            console.log(err);
-          })
+        .catch((err) => {
+          console.log(err);
+        })
   }
 
   // Проверка сохраненного фильма:
 
   function isSavedMovie(movie) {
-    debugger;
     console.log(movie);
     savedMovies.some((с) => с._id === movie._id);
   }
 
+/*   // Проверка посещения сайта
+
+  const allreadyVisitedPage = () => {
+    if (localStorage.getItem('visit')) {
+      setMovies(JSON.parse(localStorage.getItem('movies')));
+      setSavedMovies(JSON.parse(localStorage.getItem('savedMovies')));
+    } else {
+      setMovies([])
+      setSavedMovies([]);
+    }
+  }
+  
+  React.useEffect(() => {
+    allreadyVisitedPage();
+    // eslint-disable-next-line
+  }, []); */
+
   // Авторизация и регистрация:
 
-  function onRegister(name, email, password) {
+  function onRegister({name, email, password}) {
     auth.register(name, email, password)
         .then((res) => {
             if (res.data._id) {
+                onLogin(email, password);
                 history.push('/movies');
             } 
         })
@@ -263,8 +266,8 @@ function App() {
         .then((data) => {
             if (data.token){
                 localStorage.setItem('token', data.token);
-                history.push('/movies');
                 handleLogin();
+                history.push('/movies');
                 return data;
             } else {
                 return;
@@ -272,8 +275,6 @@ function App() {
         })
         .catch((err) => console.log(err));
   }
-
-  const [userData, setUserData] = React.useState('');
 
   // Проверка токена:
 
@@ -283,7 +284,7 @@ function App() {
         auth.getContent(token)
             .then((res) => {
                 if (res.data) {
-                    setUserData(res.data);
+                    setCurrentUser(res.data)
                     setLoggedIn(true);
                     history.push('/movies');
                 }
@@ -305,7 +306,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header onOpenNavigation={handleNavigationBurgerClick} />
+        <Header loggedIn={loggedIn} onOpenNavigation={handleNavigationBurgerClick} />
 
         <Switch>
           <Route exact path="/">
@@ -322,8 +323,8 @@ function App() {
             filterMovies={filterMovies}
             filterSavedMovies={filterSavedMovies}
             short={short}
-            onShortMovies={onShortMovies}
             /* onSearchMovie={onSearchMovie} */
+            onShortMovies={onShortMovies}
             setValue={setValue}
             isSavedMovie={isSavedMovie}
             onMovieLike={handleAddMovie}
@@ -340,8 +341,8 @@ function App() {
             filterMovies={filterMovies}
             filterSavedMovies={filterSavedMovies}
             short={short}
-            onShortMovies={onShortMovies}
             /* onSearchMovie={onSearchMovie} */
+            onShortMovies={onShortMovies}
             setValue={setValue}
             onMovieDelete={handleMovieDelete}
           />
@@ -350,9 +351,10 @@ function App() {
             path="/profile"
             loggedIn={loggedIn}
             component={Profile}
-            userData={userData}
+            userData={currentUser}
             handelClickLogout={handelClickLogout}
             onUpdateUser={handleUpdateUser}
+            onInfoTooltip={handleTooptipClick}
           />
 
           <Route path="/signin">
@@ -373,6 +375,7 @@ function App() {
         </Switch>
 
       
+        <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} status={tooltipStatus} />
 
         <Navigation isOpen={isNavigationOpen} onClose={closeAllPopups} />
       </div>

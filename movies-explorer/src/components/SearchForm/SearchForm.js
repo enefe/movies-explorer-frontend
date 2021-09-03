@@ -19,6 +19,7 @@ function SearchForm(props) {
             props.setValue(inputEl.current.value);
         }
     }
+
 /*     const [search, setSearch] = React.useState('');
 
     function handleInput() {
@@ -37,7 +38,7 @@ function SearchForm(props) {
 
     React.useEffect(() => {
             props.onSearchMovie(search);
-    }, [props.short]); */
+    }, [props, search]); */
 
 
     return (
@@ -45,7 +46,7 @@ function SearchForm(props) {
             <img className="search-form__image" src={icon} alt="Поиск" />
             <input ref={inputEl} /* onInput={handleInput} */ placeholder="Фильм" className="search-form__input" id="movie" name="movie" type="text" defaultValue='' />
             {validate}
-            <button type="submit" /* type="button" onClick={handleClick} */ className="search-form__button">
+            <button  type="submit" /* type="button" onClick={handleClick} */ className="search-form__button">
                 <img className="search-form__search" src={searchImg} alt="Поиск" />
             </button>
         </form>
