@@ -5,7 +5,7 @@ import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import * as auth from '../../utils/auth';
+/* import * as auth from '../../utils/auth'; */
 import {api} from '../../utils/MainApi';
 import {apiMovies} from '../../utils/MoviesApi';
 
@@ -28,6 +28,35 @@ function App() {
     setLoggedIn(true);
   }
 
+  // Проверка токена:
+
+  React.useEffect(() => {
+    tokenCheck();
+  }, [])
+
+  function tokenCheck() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        api.getContent(token)
+            .then((res) => {
+                if (res.data) {
+                    /* console.log(res); */
+                    handleLogin();
+                    setCurrentUser({
+                      ...currentUser,
+                      name: res.data.name,
+                      email: res.data.email,
+                    });
+                    history.push('/movies');
+                }
+            })
+            .catch((err) => {
+              /* localStorage.removeItem('token'); */
+              setLoggedIn(false);
+            })
+    }
+  }
+
   // Получение информации о профиле:
 
   const [currentUser, setCurrentUser] = React.useState({
@@ -35,11 +64,7 @@ function App() {
     email: "",
 });
 
-  React.useEffect(() => {
-    getUserInfo();
-  }, [loggedIn]);
-
-  const getUserInfo = () => {
+/*   const getUserInfo = () => {
     if (loggedIn) {
         api.getUserInfo()
         .then((res) => {
@@ -49,7 +74,7 @@ function App() {
              console.log(err);
         });
     }
-  }
+  } */
 
   // Попап обновления данных профиля и навигация:
 
@@ -94,17 +119,16 @@ function App() {
   const [movies, setMovies] = React.useState([]);
 
   React.useEffect(() => {
-    getMovies();
-  }, [loggedIn])
-
-  const getMovies = () => {
-    if (loggedIn) {
-        setPreloader(true);
-        apiMovies.getMovies()
+    /* debugger; */
+    const token = localStorage.getItem('token');
+    if (token && loggedIn) {
+      setPreloader(true);
+      apiMovies.getMovies()
         .then((res) => {
+          console.log(res);
           localStorage.setItem('movies', JSON.stringify(res));
           setMovies(JSON.parse(localStorage.getItem('movies')));
-        })
+       })
         .catch((err) => {
           console.log(err);
         })
@@ -112,7 +136,8 @@ function App() {
           setPreloader(false);
         }, 1000))
     }
-  }
+    
+  }, [loggedIn])
 
   // Поиск фильмов:
 
@@ -124,8 +149,6 @@ function App() {
     return (movie.nameRU.toLowerCase().includes(value.toLowerCase())) && (short ? movie.duration < 40 : movie.duration >= 40);
   })
 
-
-  
   // Чекбокс короткометражек:
 
   const onShortMovies = () => {
@@ -229,27 +252,10 @@ function App() {
     savedMovies.some((с) => с._id === movie._id);
   }
 
-/*   // Проверка посещения сайта
-
-  const allreadyVisitedPage = () => {
-    if (localStorage.getItem('visit')) {
-      setMovies(JSON.parse(localStorage.getItem('movies')));
-      setSavedMovies(JSON.parse(localStorage.getItem('savedMovies')));
-    } else {
-      setMovies([])
-      setSavedMovies([]);
-    }
-  }
-  
-  React.useEffect(() => {
-    allreadyVisitedPage();
-    // eslint-disable-next-line
-  }, []); */
-
   // Авторизация и регистрация:
 
   function onRegister({name, email, password}) {
-    auth.register(name, email, password)
+    api.register(name, email, password)
         .then((res) => {
             if (res.data._id) {
                 onLogin(email, password);
@@ -262,46 +268,29 @@ function App() {
   }
 
   function onLogin(email, password) {
-    auth.login(email, password)
+    /* debugger; */
+    api.login(email, password)
         .then((data) => {
             if (data.token){
-                localStorage.setItem('token', data.token);
                 handleLogin();
+                localStorage.setItem('token', data.token);
                 history.push('/movies');
-                return data;
-            } else {
-                return;
             }
         })
         .catch((err) => console.log(err));
   }
 
-  // Проверка токена:
-
-  function tokenCheck() {
-    const token = localStorage.getItem('token');
-    if (token) {
-        auth.getContent(token)
-            .then((res) => {
-                if (res.data) {
-                    setCurrentUser(res.data)
-                    setLoggedIn(true);
-                    history.push('/movies');
-                }
-            })
-            .catch((err) => localStorage.removeItem('token'));
-    }
-  }
-
   // Удаление токена при выходе из аккаунта:
 
   function handelClickLogout(){
-    localStorage.removeItem('token');
+    localStorage.clear();
+    /* localStorage.removeItem('token'); */
+    setCurrentUser({
+      name: '',
+      email: ''
+    });
+    setLoggedIn(false);
   }
-
-  React.useEffect(() => {
-    tokenCheck();
-  }, [])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

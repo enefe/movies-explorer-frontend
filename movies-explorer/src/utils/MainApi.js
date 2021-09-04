@@ -10,6 +10,45 @@ class Api {
         this._url = config.url;
         this._headers = config.headers;
     }
+
+    register(name, email, password) {
+        return fetch(`${this._url}/signup`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({name, email, password})
+        })
+        .then(handleResponse)
+    };
+    
+    login(email, password) {
+        /* debugger; */
+        return fetch(`${this._url}/signin`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({email, password})
+        }) 
+        .then(handleResponse) 
+    };
+    
+    getContent(token) {
+        /* debugger; */
+        return fetch(`${this._url}/users/me`, {
+          method: 'GET',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        })
+        .then(handleResponse)
+    };
     
     getUserInfo() {
         return fetch(`${this._url}/users/me`, {
@@ -32,17 +71,27 @@ class Api {
     }
 
     getMovies() {
+        const token = localStorage.getItem("token");
         return fetch(`${this._url}/movies`, {
             method: "GET",
-            headers: this._headers
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
         })
         .then(handleResponse)
     }
 
     addMovie(movie) {
+        const token = localStorage.getItem("token");
         return fetch(`${this._url}/movies`, {
             method: "POST",
-            headers: this._headers,
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({
                 country: movie.country || 'Нет страны',
                 director: movie.director,
@@ -63,9 +112,14 @@ class Api {
 
     deleteMovie(movie) {
         /* debugger; */
+        const token = localStorage.getItem("token");
         return fetch(`${this._url}/movies/${/* movie.movieId ||  */movie._id}`, {
             method: "DELETE",
-            headers: this._headers
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
         })
         .then(handleResponse)
     }
@@ -74,6 +128,7 @@ class Api {
 export const api = new Api({
     url: 'https://api.enefe-diploma.nomoredomains.club',
     headers: {
+        Accept: "application/json",
         'Content-type': 'application/json',
         authorization: `Bearer ${localStorage.getItem('token')}`
     }

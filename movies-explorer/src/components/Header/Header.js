@@ -18,14 +18,15 @@ function Header(props) {
                             <div className="header__signs">
                                 <Link to="signup" className="header__signup">Регистрация</Link>
                                 <Link to="signin" className="header__signin">Войти</Link>
-                            </div>    
+                            </div>  
                         </Route>
                     ) : (
                         <Route exact path="/">
                             <div className="header__links">
                                 <Link to="/movies"  className="header__link" onClick={props.onClose}>Фильмы</Link>
                                 <Link to="/saved-movies"  className="header__link" onClick={props.onClose}>Сохренённые фильмы</Link>
-                            </div>  
+                            </div>
+                            <Link to="/profile" className="header__profile-link"><img src={profile} alt="Аккаунт" onClick={props.onClose} className="header__image-profile" /></Link> 
                         </Route>
                     )
                 }

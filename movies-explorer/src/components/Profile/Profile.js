@@ -7,6 +7,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from "../../utils/useFormValidation";
 
 function Profile(props) {
+    /* debugger; */
     const user = React.useContext(CurrentUserContext);
 /* 
     const [name, setName] = React.useState('');
@@ -56,9 +57,13 @@ function Profile(props) {
         props.handelClickLogout();
     }
 
+    const onError = () => {
+        return '';
+    }
+
     return (
         <div className="profile">
-            <h2 className="profile__title">Привет, {props.userData.name}!</h2>
+            <h2 className="profile__title">Привет, {user.name}!</h2>
             <form className="profile__form" onSubmit={handleSubmit}>
                 <span className="profile__error">{errors.name}</span>
                 <div className="profile__data">
@@ -70,7 +75,7 @@ function Profile(props) {
                     <p className="profile__info">Email</p>
                     <input onChange={handleChange} placeholder="" className={`profile__input ${errors.email && "profile__input_invalid"}`} required id="email" name="email" type="email" defaultValue={values.email || ''} />
                 </div>
-                <button onClick={props.onInfoTooltip} className={valid && isValues ? "profile__edit" : "profile__edit profile__edit_disable"} disabled={!valid && !isValues} type="submit">Редактировать</button>
+                <button onClick={valid && isValues ? props.onInfoTooltip : onError} className={valid && isValues ? "profile__edit" : "profile__edit profile__edit_disable"} disabled={!valid && !isValues} type="submit">Редактировать</button>
             </form>
             <Link to="signin"><button onClick={handelClickOut} className="profile__exit">Выйти из аккаунта</button></Link>
         </div>
